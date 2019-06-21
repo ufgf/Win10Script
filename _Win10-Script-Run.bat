@@ -1,69 +1,67 @@
-@ECHO OFF
-:: Version 1.1
-:: December 14th, 2017
+@echo off
+:: Version 1.1.1
+:: June 21th, 2019
 
 :: Instructions
 :: Bat, Script, and setting MUST be in same Folder
 :: Change Option to = one of the listed options (mostly yes or no)
 
-Set Run_Option=0
+set "Run_Option=0"
 :: Anything other than following does nothing
 :: 0 = Go to Script Menu
-:: 1 = Run Script with Settings in Script File
+:: 1 = Run Script with settings in Script File
 :: 2 = Run Script with Windows Default
-:: 3 = Run Script with Your Setting file (Change file name bellow)
+:: 3 = Run Script with Your setting file (Change file name bellow)
 :: 4 = Load Script with Windows Default (Does not run)
-:: 5 = Load Script with Your Setting file (Does not run)
+:: 5 = Load Script with Your setting file (Does not run)
 
 :: Name of Script File
-Set Script_File=Win10-Menu.ps1
+set "Script_File=Win10-Menu.ps1"
 
-:: Name of Setting File (Change Mine.csv to your setting file, if you have one)
-Set Setting_File=Mine.csv
-:: DO NOT HAVE SPACES IN FILENAME
+:: Name of setting File (Change Mine.csv to your setting file, if you have one)
+set "setting_File=Mine.csv"
 
 :: Change these to yes or no
-Set Accept_ToS=no
+set "Accept_ToS=no"
 :: no = See ToS
 :: yes = Skip ToS (You accepted it)
 
-Set Create_Restore_Point=no
-Set Restore_Point_Name=Win10_Initial_Setup_Script
-:: DO NOT HAVE SPACES IN NAME
+set "Create_Restore_Point=no"
+set "Restore_Point_Name=Win10_Initial_setup_Script"
 
-Set Restart_when_Done=yes
+set "Restart_when_Done=yes"
 
 :: Update Checks   
 :: If update is found it will Auto-download and use that (with your settings)       
-Set Script=no
-Set Internet_Check=yes 
+set "Script=no"
+set "Internet_Check=yes" 
 :: Internet_Check only matters If Script is yes and pings to github.com is blocked 
 
 ::----------------------------------------------------------------------
 :: Do not change unless you know what you are doing
-Set Script_Directory=%~dp0
-Set Script_Path=%Script_Directory%%Script_File%
+set "Script_Directory=%~dp0"
+set "Script_Path=%Script_Directory%%Script_File%"
 
 :: DO NOT CHANGE ANYTHING PAST THIS LINE
 ::----------------------------------------------------------------------
-SETLOCAL ENABLEDELAYEDEXPANSION
+setlocal enableDelayedExpansion
 
-If /i %Run_Option%==1 Set Run_Option=!Run_Option! -run
-If /i %Run_Option%==2 Set Run_Option=!Run_Option! -run wd
-If /i %Run_Option%==3 Set Run_Option=!Run_Option! -run %Setting_File%
-If /i %Run_Option%==4 Set Run_Option=!Run_Option! -load wd
-If /i %Run_Option%==5 Set Run_Option=!Run_Option! -load %Setting_File%
+if "%Run_Option%"=="1" (set Run_Option=!Run_Option! -run)
+if "%Run_Option%"=="2" (set Run_Option=!Run_Option! -run wd)
+if "%Run_Option%"=="3" (set Run_Option=!Run_Option! -run %setting_File%)
+if "%Run_Option%"=="4" (set Run_Option=!Run_Option! -load wd)
+if "%Run_Option%"=="5" (set Run_Option=!Run_Option! -load %setting_File%)
 
-If /i %Accept_ToS%==yes Set Run_Option=!Run_Option! -atos
+if /i "%Accept_ToS%"=="yes" (set Run_Option=!Run_Option! -atos)
 
-If /i %Create_Restore_Point%==yes Set Run_Option=!Run_Option! -crp %Restore_Point_Name%
+if /i "%Create_Restore_Point%"=="yes" (set Run_Option=!Run_Option! -crp %Restore_Point_Name%)
 
-If /i %Internet_Check%==no Set Run_Option=!Run_Option! -sic
+if /i "%Internet_Check%"=="no" (set Run_Option=!Run_Option! -sic)
 
-If /i %Script%==yes Set Run_Option=!Run_Option! -usc
+if /i "%Script%"=="yes" (set Run_Option=!Run_Option! -usc)
 
-If /i %Restart_when_Done%==no Set Run_Option=!Run_Option! -dnr
+if /i "%Restart_when_Done%"=="no" (set Run_Option=!Run_Option! -dnr)
 
-echo "Running !Script_File!"
+echo Running !Script_File!
 PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '!Script_Path!' !Run_Option!" -Verb RunAs
-ENDLOCAL DISABLEDELAYEDEXPANSION
+setlocal disableDelayedExpansion
